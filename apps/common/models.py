@@ -1,37 +1,13 @@
 from django.db import models
 
-
-class User(models.Model):
-    user_name = models.CharField(max_length=200)
-    user_password = models.CharField(max_length=100)
+from apps.users.models import User
 
 
 class Company(models.Model):
-    company_name = models.CharField(max_length=200)
-    company_location = models.CharField(max_length=200)
-    company_number = models.IntegerField(max_length=12)
-    user = models.ForeignKey(User, related_name='user', on_delete=models.PROTECT)
-
-
-class Job(models.Model):
-    job_role = models.CharField(max_length=200)
-    company = models.ForeignKey(Company, related_name='company', on_delete=models.CASCADE)
-
-
-class Accesssor(models.Model):
-    user = models.ForeignKey(User, related_name='user', on_delete=models.PROTECT)
-    job = models.ForeignKey(Job, related_name='job', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-
-
-class Interview(models.Model):
-    accessor = models.ForeignKey(Accesssor, related_name='accessor', on_delete=models.CASCADE)
-
-
-class Candidate(models.Model):
-    name = models.CharField(max_length=100)
-    nic_number = models.IntegerField(max_length=15)
-    contact_number = models.IntegerField(max_length=12)
+    location = models.CharField(max_length=200)
+    number = models.IntegerField(max_length=12)
+    user = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
 
 
 class Question(models.Model):
@@ -40,9 +16,30 @@ class Question(models.Model):
 
 
 class Section(models.Model):
-    section_name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     question = models.ForeignKey(Question, related_name='questions', on_delete=models.CASCADE)
     company = models.ForeignKey(Company, related_name='company', on_delete=models.CASCADE)
+
+
+class Job(models.Model):
+    job_role = models.CharField(max_length=200)
+    company = models.ForeignKey(Company, related_name='company', on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, related_name='section', on_delete=models.CASCADE)
+
+
+class Assessor(models.Model):
+    name = models.CharField(max_length=200)
+    documents = models.CharField(max_length=200)
+
+
+class Interview(models.Model):
+    assessor = models.ForeignKey(Assessor, related_name='assessor', on_delete=models.CASCADE)
+
+
+class Candidate(models.Model):
+    name = models.CharField(max_length=100)
+    nic = models.IntegerField(max_length=15)
+    contact_number = models.IntegerField(max_length=12)
 
 
 class Experience(models.Model):
