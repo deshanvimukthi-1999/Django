@@ -7,12 +7,12 @@ class Company(models.Model):
     name = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
     number = models.IntegerField(max_length=12)
-    user = models.OneToOneField(User, related_name='owner', null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='owner', on_delete=models.CASCADE)
 
 
 class Job(models.Model):
-    job_role = models.CharField(max_length=200)
-    company = models.ForeignKey(Company, related_name='jobs', null=True, on_delete=models.CASCADE)
+    role = models.CharField(max_length=200)
+    company = models.ForeignKey(Company, related_name='jobs', on_delete=models.CASCADE)
 
 
 class Section(models.Model):
@@ -29,21 +29,21 @@ class Question(models.Model):
 class Assessor(models.Model):
     name = models.CharField(max_length=200)
     documents = models.CharField(max_length=200)
-    user = models.ForeignKey(User, related_name='assessors', null=True, on_delete=models.CASCADE)
-    job = models.ManyToManyField(Job, related_name='assessors', null=True)
+    user = models.ForeignKey(User, related_name='assessors', on_delete=models.CASCADE)
+    jobs = models.ManyToManyField(Job, related_name='assessors')
 
 
 class Interview(models.Model):
-    assessor = models.ForeignKey(Assessor, related_name='interviews', null=True,  on_delete=models.CASCADE)
-    job = models.ForeignKey(Job, related_name='interviews', null=True,  on_delete=models.CASCADE)
+    assessor = models.ForeignKey(Assessor, related_name='interviews', on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, related_name='interviews', on_delete=models.CASCADE)
 
 
 class Candidate(models.Model):
     name = models.CharField(max_length=100)
     nic = models.IntegerField(max_length=15)
     contact_number = models.IntegerField(max_length=12)
-    job = models.ManyToManyField(Job, related_name='candidates', null=True)
-    company = models.ForeignKey(Company, related_name='candidates', null=True, on_delete=models.CASCADE)
+    jobs = models.ManyToManyField(Job, related_name='candidates')
+    company = models.ForeignKey(Company, related_name='candidates', on_delete=models.CASCADE)
 
 
 class Experience(models.Model):
